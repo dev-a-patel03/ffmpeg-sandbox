@@ -1,0 +1,13 @@
+# build output
+/bin/
+*.o
+
+# transient media / scratch
+/tmp/
+*.mp4
+*.mpd
+*.m3u8
+
+# editor / os
+.DS_Store
+*.swp

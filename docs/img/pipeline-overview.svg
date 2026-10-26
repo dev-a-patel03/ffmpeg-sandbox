@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="16" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#334155"/>
+    </marker>
+    <marker id="arR" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="16" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#c0362c"/>
+    </marker>
+    <marker id="arG" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="16" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#15803d"/>
+    </marker>
+    <filter id="sh" x="-6%" y="-6%" width="112%" height="118%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      text{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;fill:#0f172a}
+      .title{font-size:40px;font-weight:700}
+      .sub{font-size:24px;fill:#475569}
+      .h{font-size:28px;font-weight:600}
+      .b{font-size:24px;font-weight:400}
+      .l{font-size:22px;font-weight:600}
+      .s{font-size:22px;fill:#475569}
+      .tag{font-size:22px;font-weight:700;fill:#ffffff;letter-spacing:.5px}
+    </style>
+  </defs>
+
+  <rect width="1200" height="820" fill="#ffffff"/>
+  <text class="title" x="40" y="62">Where hostile bytes flow</text>
+  <text class="sub" x="40" y="102">Two parsers touch the upload. Only one needs the network.</text>
+
+  <!-- ROW 1: upload, store, sign, probe -->
+
+  <!-- Client: untrusted input -->
+  <rect x="40" y="202" width="160" height="120" rx="14" fill="#fdecea" stroke="#c0362c" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="120" y="254" text-anchor="middle">Client</text>
+  <text class="b" x="120" y="290" text-anchor="middle">upload</text>
+
+  <!-- S3 ingest cylinder -->
+  <g filter="url(#sh)">
+    <path d="M260,208 v108 a85,16 0 0 0 170,0 v-108" fill="#e3f3f0" stroke="#0f766e" stroke-width="3"/>
+    <ellipse cx="345" cy="208" rx="85" ry="16" fill="#f0f8f6" stroke="#0f766e" stroke-width="3"/>
+  </g>
+  <text class="h" x="345" y="268" text-anchor="middle">S3 ingest</text>
+  <text class="b" x="345" y="302" text-anchor="middle">bucket</text>
+
+  <!-- Gate Lambda: our code, outside any cage -->
+  <rect x="486" y="202" width="260" height="120" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="616" y="252" text-anchor="middle">Gate Lambda</text>
+  <text class="b" x="616" y="290" text-anchor="middle">signs a 10-min URL</text>
+
+  <!-- Own VPC band: only the probe is inside -->
+  <rect x="770" y="124" width="390" height="232" rx="18" fill="#f3f7fd" stroke="#2563eb" stroke-width="3" stroke-dasharray="12 8"/>
+  <text class="l" x="794" y="158" style="fill:#2563eb">Own VPC · egress to S3 only</text>
+
+  <!-- Probe Lambda: sandboxed -->
+  <rect x="794" y="192" width="342" height="144" rx="14" fill="#fdf3e2" stroke="#b45309" stroke-width="3" filter="url(#sh)"/>
+  <rect x="890" y="174" width="222" height="36" rx="18" fill="#b45309"/>
+  <text class="tag" x="1001" y="200" text-anchor="middle">NETWORK CAGED</text>
+  <text class="h" x="818" y="246">Probe Lambda</text>
+  <text class="b" x="818" y="284">ffprobe reads S3</text>
+  <text class="b" x="818" y="316">over HTTPS</text>
+
+  <!-- row 1 arrows -->
+  <line x1="200" y1="262" x2="256" y2="262" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="746" y1="262" x2="790" y2="262" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <!-- ROW 2: Step Functions runs the job -->
+  <rect x="40" y="410" width="830" height="80" rx="14" fill="#e8f0fe" stroke="#2563eb" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="455" y="460" text-anchor="middle">Step Functions <tspan class="b">· runs the job</tspan></text>
+
+  <!-- S3 ingest starts the job -->
+  <line x1="345" y1="334" x2="345" y2="406" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text class="s" x="329" y="378" text-anchor="end">new upload</text>
+  <!-- Step Functions calls the gate, the gate returns the probe's verdict -->
+  <line x1="560" y1="408" x2="560" y2="326" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text class="s" x="544" y="378" text-anchor="end">calls</text>
+  <line x1="666" y1="324" x2="666" y2="406" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text class="s" x="682" y="378">verdict</text>
+
+  <!-- reject -->
+  <line x1="870" y1="450" x2="956" y2="450" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <text class="l" x="913" y="436" text-anchor="middle" style="fill:#c0362c">reject</text>
+  <rect x="960" y="400" width="200" height="100" rx="14" fill="#fdecea" stroke="#c0362c" stroke-width="3"/>
+  <text class="h" x="1060" y="442" text-anchor="middle" style="fill:#c0362c">Rejected</text>
+  <text class="b" x="1060" y="478" text-anchor="middle">stops here</text>
+
+  <!-- accept: Step Functions sends the job -->
+  <line x1="135" y1="490" x2="135" y2="586" stroke="#15803d" stroke-width="3" marker-end="url(#arG)"/>
+  <text class="l" x="153" y="526" style="fill:#15803d">accepted · sends the job</text>
+
+  <!-- ROW 3: queue, worker, output, CDN -->
+
+  <!-- Job queue -->
+  <rect x="40" y="590" width="190" height="120" rx="14" fill="#e8f0fe" stroke="#2563eb" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="135" y="640" text-anchor="middle">Job queue</text>
+  <text class="b" x="135" y="676" text-anchor="middle">(SQS)</text>
+
+  <!-- ECS worker: our code, has network for S3 and SQS -->
+  <rect x="290" y="550" width="400" height="230" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="314" y="594">ECS worker · Go</text>
+  <text class="b" x="314" y="630">downloads the file</text>
+  <!-- FFmpeg inside it: sandboxed, no network -->
+  <rect x="314" y="668" width="352" height="88" rx="14" fill="#fdf3e2" stroke="#b45309" stroke-width="3"/>
+  <rect x="458" y="650" width="184" height="36" rx="18" fill="#b45309"/>
+  <text class="tag" x="550" y="676" text-anchor="middle">NO NETWORK</text>
+  <text class="b" x="338" y="728">FFmpeg under nonet</text>
+
+  <!-- S3 output cylinder -->
+  <g filter="url(#sh)">
+    <path d="M750,596 v108 a85,16 0 0 0 170,0 v-108" fill="#e3f3f0" stroke="#0f766e" stroke-width="3"/>
+    <ellipse cx="835" cy="596" rx="85" ry="16" fill="#f0f8f6" stroke="#0f766e" stroke-width="3"/>
+  </g>
+  <text class="h" x="835" y="656" text-anchor="middle">S3 output</text>
+  <text class="b" x="835" y="690" text-anchor="middle">renditions</text>
+
+  <!-- CDN -->
+  <rect x="980" y="590" width="180" height="120" rx="14" fill="#e8f0fe" stroke="#2563eb" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="1070" y="640" text-anchor="middle">CDN</text>
+  <text class="b" x="1070" y="676" text-anchor="middle">viewers</text>
+
+  <!-- row 3 arrows -->
+  <line x1="230" y1="650" x2="286" y2="650" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="690" y1="650" x2="746" y2="650" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="920" y1="650" x2="976" y2="650" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+</svg>

@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1126" viewBox="0 0 1200 1126">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="16" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#334155"/>
+    </marker>
+    <marker id="arR" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="16" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#c0362c"/>
+    </marker>
+    <filter id="sh" x="-6%" y="-6%" width="112%" height="118%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      text{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;fill:#0f172a}
+      .title{font-size:40px;font-weight:700}
+      .sub{font-size:24px;fill:#475569}
+      .h{font-size:28px;font-weight:600}
+      .b{font-size:24px}
+      .l{font-size:22px}
+      .sec{fill:#475569}
+      .num{font-size:22px;font-weight:700;fill:#ffffff}
+      .mono{font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:22px}
+    </style>
+  </defs>
+  <rect width="1200" height="1126" fill="#ffffff"/>
+
+  <text class="title" x="40" y="62">How nonet cages FFmpeg</text>
+  <text class="sub" x="40" y="102">A small helper installs a syscall filter, then becomes FFmpeg</text>
+
+  <!-- LEFT: the exec sequence -->
+  <rect x="40" y="140" width="400" height="110" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="64" y="184">Go worker</text>
+  <text class="mono" x="64" y="226">nonet ffmpeg -i in.mp4 …</text>
+
+  <line x1="240" y1="250" x2="240" y2="298" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <rect x="40" y="302" width="400" height="320" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="64" y="346">nonet</text>
+
+  <circle cx="80" cy="392" r="18" fill="#475569"/><text class="num" x="80" y="400" text-anchor="middle">1</text>
+  <text class="b" x="112" y="400">close inherited fds above 3</text>
+  <circle cx="80" cy="444" r="18" fill="#475569"/><text class="num" x="80" y="452" text-anchor="middle">2</text>
+  <text class="b" x="112" y="452">set no-new-privileges</text>
+  <circle cx="80" cy="496" r="18" fill="#475569"/><text class="num" x="80" y="504" text-anchor="middle">3</text>
+  <text class="b" x="112" y="504">install the filter</text>
+  <circle cx="80" cy="548" r="18" fill="#475569"/><text class="num" x="80" y="556" text-anchor="middle">4</text>
+  <text class="b" x="112" y="556">exec FFmpeg in place</text>
+  <text class="l sec" x="112" y="590">same process, filter stays on</text>
+
+  <line x1="240" y1="622" x2="240" y2="686" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <rect x="40" y="690" width="400" height="84" rx="14" fill="#fdf3e2" stroke="#b45309" stroke-width="3" filter="url(#sh)"/>
+  <text class="h" x="64" y="742" style="fill:#b45309">FFmpeg · caged</text>
+
+  <!-- why the process rule looks the way it does -->
+  <rect x="40" y="814" width="400" height="268" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="b" x="64" y="854" style="font-weight:600">Why threads pass</text>
+  <text class="l sec" x="64" y="886">A thread shares FFmpeg's process</text>
+  <text class="l sec" x="64" y="916">and dies with it. A new process</text>
+  <text class="l sec" x="64" y="946">could outlive FFmpeg.</text>
+  <text class="b" x="64" y="990" style="font-weight:600">Why clone3 gets ENOSYS</text>
+  <text class="l sec" x="64" y="1022">Its flags sit in memory the filter</text>
+  <text class="l sec" x="64" y="1052">can't read. libc then uses clone.</text>
+
+  <!-- RIGHT: the filter -->
+  <text class="h" x="480" y="168" style="font-size:24px">Each syscall is checked</text>
+
+  <rect x="480" y="190" width="320" height="72" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="235" text-anchor="middle">32-bit or x32 syscall?</text>
+  <rect x="480" y="314" width="320" height="72" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="359" text-anchor="middle">io_uring_setup?</text>
+  <rect x="480" y="438" width="320" height="72" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="483" text-anchor="middle">socket()? any family</text>
+  <rect x="480" y="562" width="320" height="72" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="607" text-anchor="middle">socketpair()?</text>
+  <rect x="480" y="686" width="320" height="72" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="731" text-anchor="middle">clone3?</text>
+  <rect x="480" y="810" width="320" height="120" rx="14" fill="#eef2f6" stroke="#94a3b8" stroke-width="3"/>
+  <text class="b" x="640" y="852" text-anchor="middle">starts a process?</text>
+  <text class="l sec" x="640" y="884" text-anchor="middle">fork, vfork, or clone</text>
+  <text class="l sec" x="640" y="914" text-anchor="middle">without <tspan class="mono">CLONE_THREAD</tspan></text>
+
+  <!-- no chain -->
+  <line x1="640" y1="262" x2="640" y2="310" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="640" y1="386" x2="640" y2="434" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="640" y1="510" x2="640" y2="558" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="640" y1="634" x2="640" y2="682" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="640" y1="758" x2="640" y2="806" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="640" y1="930" x2="640" y2="978" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text class="l sec" x="656" y="295">no</text>
+  <text class="l sec" x="656" y="419">no</text>
+  <text class="l sec" x="656" y="543">no</text>
+  <text class="l sec" x="656" y="667">no</text>
+  <text class="l sec" x="656" y="791">no</text>
+  <text class="l sec" x="656" y="963">no</text>
+
+  <!-- yes arrows -->
+  <line x1="800" y1="226" x2="877" y2="226" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <line x1="800" y1="350" x2="877" y2="350" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <line x1="800" y1="474" x2="877" y2="474" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <line x1="800" y1="598" x2="877" y2="598" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <line x1="800" y1="722" x2="877" y2="722" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <line x1="800" y1="870" x2="877" y2="870" stroke="#c0362c" stroke-width="3" marker-end="url(#arR)"/>
+  <text class="l" x="840" y="210" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+  <text class="l" x="840" y="334" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+  <text class="l" x="840" y="458" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+  <text class="l" x="840" y="582" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+  <text class="l" x="840" y="706" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+  <text class="l" x="840" y="854" text-anchor="middle" style="fill:#c0362c;font-weight:600">yes</text>
+
+  <!-- DENY -->
+  <rect x="880" y="190" width="280" height="740" rx="14" fill="#fdecea" stroke="#c0362c" stroke-width="3" filter="url(#sh)"/>
+  <text x="1020" y="384" text-anchor="middle" style="font-size:32px;font-weight:700;fill:#c0362c">DENY</text>
+  <text class="b" x="1020" y="430" text-anchor="middle">returns EACCES</text>
+  <text class="mono" x="1020" y="466" text-anchor="middle" style="fill:#c0362c">Permission denied</text>
+  <text class="l" x="1020" y="716" text-anchor="middle"><tspan class="mono">clone3</tspan> gets</text>
+  <text class="l" x="1020" y="746" text-anchor="middle">ENOSYS instead</text>
+
+  <!-- ALLOW -->
+  <rect x="480" y="982" width="680" height="100" rx="14" fill="#e6f4ea" stroke="#15803d" stroke-width="3" filter="url(#sh)"/>
+  <text class="b" x="820" y="1024" text-anchor="middle" style="font-weight:600;fill:#15803d">everything else: allowed</text>
+  <text class="l" x="820" y="1060" text-anchor="middle">threads too: <tspan class="mono">clone</tspan> with <tspan class="mono">CLONE_THREAD</tspan></text>
+</svg>
