@@ -1,7 +1,7 @@
 # ffmpeg-sandbox
 
 A small, runnable mimic of the transcoding worker from Part 1,
-**"Every Upload Is an Exploit Attempt: Sandboxing FFmpeg on AWS."** It is the
+**["Every Upload Is an Exploit Attempt: Sandboxing FFmpeg on AWS."](https://medium.com/@devpatela933/every-upload-is-an-exploit-attempt-sandboxing-ffmpeg-on-aws-32e1e4569f15)** It is the
 code you can clone and run after reading the article, so the controls stop being
 prose and start being binaries you can poke at.
 
